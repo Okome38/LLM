@@ -1,0 +1,265 @@
+{
+    "documents": [
+        {
+            "content": "投稿者: t-saitoh in 情報構造論, 斉藤徹, 講義録 投稿日: 2024年11月17日",
+            "metadata": {
+                "title": "木構造の探索・深さ優先探索・幅優先探索",
+                "section": "記事冒頭",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/11/17/depth-first-scan-breadth-first-scan-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "## 深さ優先探索(前順)\n\n以前紹介した2分木の表示では、再帰呼び出しで木の処理を記述していた。\n\nしかし、スタックを使って未処理のノードを保存しながらノードに対する処理を行えば、ループ処理で「すべての木のノード」に対する処理を記述できる。このような木に対する処理は、末端方向に処理が進むことが優先されるため深さ優先探索と呼ぶ。\n\n以下のプログラムで示す深さ優先探索では、ノードに対する処理を行ってから左の枝葉の処理が行われる。このような深さ優先探索は前順(pre-order)と呼ぶ。\n\nこのような探索は、ゲームですべての戦略の先読みを行う処理で用いられる。\n\n```java\nimport java.util.*;\n\nclass BTreeNode {\nint data ;\nBTreeNode left ;\nBTreeNode right ;\nBTreeNode( int x , BTreeNode l , BTreeNode r ) {\nthis.data = x ;\nthis.left = l ;\nthis.right = r ;\n}\n}\npublic class Main {\n// 再帰呼び出しによる木の操作 = 深さ優先探索(前順)\npublic static void print_rec_depth_first_pre_order( BTreeNode p ) {\nif ( p != null ) {\nSystem.out.print( p.data + \" \" ) ;\nprint_rec_depth_first_pre_order( p.left ) ;\nprint_rec_depth_first_pre_order( p.right ) ;\n}\n}\n// 深さ優先探索(前順)\npublic static void print_depth_first_pre_order( BTreeNode p ) {\n// 未処理ノードを保存するスタック\nLinkedList stack = new LinkedList<>() ;\nstack.addFirst( p ) ; // push\nwhile( !stack.isEmpty() ) {\n// スタックトップを取り出す\np = stack.removeFirst() ; // pop\nif ( p != null ) {\nSystem.out.print( p.data + \" \" ) ;\n// 枝を未処理スタックに保存\nstack.addFirst( p.right ) ; // 右を後回し\nstack.addFirst( p.left ) ;\n}\n}\n}\npublic static void main(String[] args) throws Exception {\nBTreeNode top =\nnew BTreeNode( 42 ,\nnew BTreeNode( 27 ,\nnew BTreeNode( 13 , null , null ) ,\nnew BTreeNode( 38 , null , null ) ) ,\nnew BTreeNode( 72 ,\nnew BTreeNode( 64 , null , null ) ,\nnew BTreeNode( 81 , null , null ) ) ) ;\n// 再帰による深さ優先探索(前順)\nprint_rec_depth_first_pre_order( top ) ;\nSystem.out.println() ;\n// スタックを使った深さ優先探索(前順)\nprint_depth_first_pre_order( top ) ;\nSystem.out.println() ;\n}\n}\n```",
+            "metadata": {
+                "title": "木構造の探索・深さ優先探索・幅優先探索",
+                "section": "深さ優先探索(前順)",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/11/17/depth-first-scan-breadth-first-scan-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "## 幅優先探索\n\n同じように、未処理のノードを待ち行列に保存しながら、ノードに対する処理を行うことでも、すべての木に対する処理が記述できる。この場合、根本の処理をすべて終えてから、末端に対する処理が行われる。このような処理は幅優先探索と呼ぶ。\n\n幅優先探索の処理と、前順の深さ優先探索を比べると、ノードを覚えるデータ構造に待ち行列を使う(幅優先探索)か、スタックを使う(深さ優先探索)の違いしかない。\n\n幅優先探索は、ゲームの戦略で先読みを行う場合に用いられるが、チェス・将棋・囲碁といったすべての先読みを行うと手数が爆発的に増加するため、不利な戦略の先読みを途中で打ち切る必要がある場合に有用である。\n\n```java\npublic class Main {\n// 幅優先探索\npublic static void print_breadth_first( BTreeNode p ) {\n// 未処理ノードを保存する待ち行列\nLinkedList queue = new LinkedList<>() ;\nqueue.addFirst( p ) ; // put\nwhile( !queue.isEmpty() ) {\n// 待ち行列の先頭を取り出す\np = queue.removeLast() ; // get\nif ( p != null ) {\nSystem.out.print( p.data + \" \" ) ;\n// 枝を未処理待ち行列に追加\nqueue.addFirst( p.left ) ; // 左から処理\nqueue.addFirst( p.right ) ;\n}\n}\n}\npublic static void main(String[] args) throws Exception {\nBTreeNode top = (略) ;\n// 幅優先探索で表示\nprint_breadth_first( top ) ;\nSystem.out.println() ;\n}\n}\n```",
+            "metadata": {
+                "title": "木構造の探索・深さ優先探索・幅優先探索",
+                "section": "幅優先探索",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/11/17/depth-first-scan-breadth-first-scan-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "## 深さ優先探索(中順)\n\n2分探索木のようなデータで、昇順で並べて表示する必要がある場合、再帰呼び出しのプログラムでは、「左枝の処理、ノードへの処理、右枝の処理」の順で記述する必要がある。このような深さ優先探索は中順(in-order)と呼ばれる。しかし、先に説明した再帰による深さ優先探索(前順/pre-order)では、「ノードへの処理、左枝の処理、右枝の処理」で記述されている。\n\nスタックを用いた深さ優先探索で、2分探索木の昇順のように中順で処理を行うには、未処理のノードの保存順序に工夫が必要となる。\n\n```java\nimport java.util.*;\n\npublic class Main {\n// 再帰呼び出しによる木の操作 = 深さ優先探索(中順)\npublic static void print_rec_depth_first_in_order( BTreeNode p ) {\nif ( p != null ) {\nprint_rec_depth_first_in_order( p.left ) ;\nSystem.out.print( p.data + \" \" ) ;\nprint_rec_depth_first_in_order( p.right ) ;\n}\n}\n// 深さ優先探索(中順)\npublic static void print_depth_first_in_order( BTreeNode p ) {\n// 未処理ノードを保存するスタック\nLinkedList stack = new LinkedList<>() ;\nfor( ;; ) {\n// ノードを保存しながら左末端まで進む\nwhile( p != null ) {\nstack.addFirst( p ) ;\np = p.left ;\n}\n// 未処理が残っていないなら終了\nif ( stack.isEmpty() )\nbreak ;\n// スタックトップを取り出す\np = stack.removeFirst() ; // pop\nSystem.out.print( p.data + \" \" ) ;\np = p.right ;\n}\n}\npublic static void main(String[] args) throws Exception {\nBTreeNode top = (略) ;\n// 再帰による深さ優先探索(中順)\nprint_rec_depth_first_in_order( top ) ;\nSystem.out.println() ;\n// スタックを使った深さ優先探索(中順)\nprint_depth_first_in_order( top ) ;\nSystem.out.println() ;\n}\n}\n```",
+            "metadata": {
+                "title": "木構造の探索・深さ優先探索・幅優先探索",
+                "section": "深さ優先探索(中順)",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/11/17/depth-first-scan-breadth-first-scan-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "# データベースとB木\n\n2分探索木の考え方を拡張したもので**B木**があり、データベースシステムではB木を基本としたデータ構造が活用されている。",
+            "metadata": {
+                "title": "データベースとB木",
+                "section": "記事冒頭",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/09/database-btree-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### B木の構造\n\n2分木では、データの増減で木の組換えの発生頻度が高い。そこで、1つのノード内に複数のデータを一定数覚える方法をとる。B木では、位数=*N*に対し、最大2*N*個のデータ d<sub>0</sub>, … , d<sub>2*N*-1</sub> と、2*N*+1本のポインタ p<sub>0</sub>, … , p<sub>2*N*</sub> から構成される。p<sub>i</sub> の先には、d<sub>i-1</sub>< x < d<sub>i</sub> を満たすデータが入った B木のノードを配置する。ただし、データの充填率を下げないようにするため、データは最小でも*N*個、最大で2*N*個を保存する。下図は位数2のB木の例を示す。\n\n![BTree](https://www.ei.fukui-nct.ac.jp/wp-content/uploads/2024/12/2024-12-09-BTree.png)",
+            "metadata": {
+                "title": "データベースとB木",
+                "section": "B木の構造",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/09/database-btree-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### B木からデータの検索\n\nデータを探す場合は、ノード内のデータ d<sub>i</sub> の中から探し、見つからない場合は、ポインタの先のデータを探す。位数がある程度大きい場合、ノード内の検索は**2分探索法**が使用できる。また、1つのノード内の検索が終われば、探索するデータ件数は、**1/*N*〜1/2*N***となることから、指数的に対象件数が減っていく。よって、検索時間のオーダは、***O*( log *N* )** となる。",
+            "metadata": {
+                "title": "データベースとB木",
+                "section": "B木からデータの検索",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/09/database-btree-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### B木へのデータの追加\n\nB木にデータを追加する場合は、ノード内に空きがあれば、単純にデータの追加を行う。ノード内のデータが2*N*個を越える場合は、以下のような処理を行う。\n\nノード内のデータと追加データを並べ、その**中央値**を選ぶ。この中央値より大きいデータは、新たにつくられたノードに移す。中央値のデータは上のノードに追加処理を行う。このような方法を取ることで、2分木のような木の偏りが作られにくい構造となるようにする。\n\n![BTree](https://www.ei.fukui-nct.ac.jp/wp-content/uploads/2017/11/2017-11-13-btree-2-300x254.png)\n\nデータを削除する場合も同様に、データ件数がN個を下回る場合は、隣接するノードからデータを取ってくることで、N個を下回らないようにする。",
+            "metadata": {
+                "title": "データベースとB木",
+                "section": "B木へのデータの追加",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/09/database-btree-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### B木とデータベース\n\nこのB木の構造は、一般的にデータベースのデータを保存するために広く利用されている。\n\nデータベースシステムでは、データを効率よく保存するだけでなく、データの**一貫性**が保たれるように作られている。\n\n例えば、データベースのシステムが途中でクラッシュした場合でも、データ更新履歴の情報を元にデータを元に戻し、データを再投入して復旧できなければならない。データを複数の所からアクセスした場合に、その順序から変な値にならないように、**排他制御**も行ってくれる。\n\nデータベースで最も使われているシステムは、データすべてを表形式で扱う**リレーショナル・データベース**である。\n\n```\n((リレーショナル・データベースの例))\nSTUDENT[] RESULT[]\nID | name | grade | course ID | subject | point\n-----+----------+-------+-------- -----+---------+-------\n1001 | t-saitoh | 5 | EI 1001 | math | 83\n1002 | sakamoto | 4 | E 1001 | english | 65\n1003 | aoyama | 4 | EI 1002 | english | 90 外部キー\n((SQLの例 2つの表の串刺し))\n-- 60点以上の学生名,科目名,点数を出力 --\nselect STUDENT.name, RESULT.subject, RESULT.point --射影-- from STUDENT , RESULT --結合-- where STUDENT.ID = RESULT.ID -- 串刺し -- --選択-- and RESULT.point >= 60 ;\n((上記SQLを Java で書いた場合))\nSTUDENT[] student = { ... } ;\nRESULT[] result = { ... } ;\nfor( int st = 0 ; st < student.length ; st++ ) // 結合(from) for( int re = 0 ; re < result.length ; re++ ) if ( student[ st ].ID == result[ re ].ID // 選択(where) && result[ re ].point >= 60 ) System.out.println( student[ st ].name + \" \" // 射影(select) + result[ re ].subject + \" \" + result[ re ].point ) ;\n```\n\n* [学生と成績](https://paiza.io/projects/inKg2MP8kdVXDu4Cf67S1Q)(Paiza.ioでSQL)\n* [Javaで書いたデータベースの串刺し](https://paiza.io/projects/D7T_ytH272ntW4cQSeRQdQ)",
+            "metadata": {
+                "title": "データベースとB木",
+                "section": "B木とデータベース",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/09/database-btree-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### B+木\n\nデータベースの処理では、目的のデータを *O*(log *N*) で見つける以外にも、全データに対する処理も重要である。この場合、全てのデータに対する処理では、単純なB木では再帰呼び出しが必要となる。しかし、他の表でも再帰処理を伴うと、プログラムは複雑になってしまう。\n\nそこで、B木のデータを横方向に並べて処理を行う場合に、その処理が簡単になるように **B+木**が用いられる。\n\nこの方法では、末端のノードは、隣接するノードへのポインタを持つ。下図で示すB+木では、青で示す**検索用のB木**の部分と、赤で示す**順次処理を行うためのシーケンスセット**の部分から構成される。\n\n![B+Tree](https://www.ei.fukui-nct.ac.jp/wp-content/uploads/2019/01/2019-01-29-bplus.png)",
+            "metadata": {
+                "title": "データベースとB木",
+                "section": "B+木",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/09/database-btree-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "# ハッシュ法\n\n究極のシンプルなやり方(メモリの無駄)\n最も簡単なアルゴリズムは、電話番号から名前を求めるようなデータベースであれば、電話番号自身を配列添え字番号とする方法がある。しかしながら、この方法は大量のメモリを必要とする。",
+            "metadata": {
+                "title": "ハッシュ法",
+                "section": "記事冒頭",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/15/hash-openaddress-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### ハッシュ法\n先に述べたように、データの一部を取り出して、それを配列の添え字番号として保存することで、高速にデータを読み書きできるようにするアルゴリズムはハッシュ法と呼ばれる。データを格納する表をハッシュ表、データの一部を取り出した添え字番号はハッシュ値、ハッシュ値を得るための関数がハッシュ関数と呼ばれる。",
+            "metadata": {
+                "title": "ハッシュ法",
+                "section": "ハッシュ法",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/15/hash-openaddress-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### ハッシュ関数に求められる特性\nハッシュ関数は、できる限り同じような値が求まるものは、ハッシュ衝突が多発するので、避けなければならない。同じデータに対し常に、同じハッシュ値が求まること。簡単な計算で求まること。",
+            "metadata": {
+                "title": "ハッシュ法",
+                "section": "ハッシュ関数に求められる特性",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/15/hash-openaddress-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### オープンアドレス法\n先に座っている人がいた場合、最も簡単な椅子に座る方法は、隣が空いているか確認して空いていたらそこに座ればいい。このハッシュ法は、求まったアドレスの場所にこだわらない方式でオープンアドレス法と呼ばれる。",
+            "metadata": {
+                "title": "ハッシュ法",
+                "section": "オープンアドレス法",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/15/hash-openaddress-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### 文字列のハッシュ値\n一般的には文字列といったような名前から、ハッシュ値が欲しいことが普通だろう。ハッシュ値は、簡単な計算で、見た目デタラメな値が求まればいい。複数の文字で、これらの文字コードを加えるなどの計算をすれば、 偏りの少ない値を取り出すことができる。",
+            "metadata": {
+                "title": "ハッシュ法",
+                "section": "文字列のハッシュ値",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/15/hash-openaddress-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### チェイン法\nチェイン法は、同じハッシュ値のデータをグループ化して保存する方法。 同じハッシュ値のデータは、リスト構造とするのが一般的。ハッシュ値を求めたら、そのリスト構造の中からひとつづつ目的のデータを探す処理となる。",
+            "metadata": {
+                "title": "ハッシュ法",
+                "section": "チェイン法",
+                "source": "https://www.ei.fukui-nct.ac.jp/2024/12/15/hash-openaddress-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "# メモリ管理・スタック領域とヒープ領域\n\nC言語では、データ領域は、定数領域、静的変数領域、スタック領域、ヒープ領域 で構成される。スタック領域は、関数が呼び出される時に確保され、関数を抜ける時にデータが消される。ヒープ領域は、データを覚える領域は、関数が終わった後も使われる領域。",
+            "metadata": {
+                "title": "メモリ管理・スタック領域とヒープ領域",
+                "section": "記事冒頭",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/06/memory-management-stack-heap-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### 共有の発生したデータの扱い\nC言語では、ヒープメモリの管理するには色々と複雑なことが発生する。共有が発生すると、解放済みのデータ領域をさらに解放する処理が実行できないことがある。Javaでは問題なく動作する。",
+            "metadata": {
+                "title": "メモリ管理・スタック領域とヒープ領域",
+                "section": "共有の発生したデータの扱い",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/06/memory-management-stack-heap-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### 参照カウンタ法\nデータを参照するポインタの数をデータと共に保存する。共有が発生すると、参照カウンタをカウントアップし、データを捨てる際には、参照カウンタをカウントダウンし、0になったら本当にそのデータを消す。循環リストではカウンタが0にならないので、取扱いが苦手。",
+            "metadata": {
+                "title": "メモリ管理・スタック領域とヒープ領域",
+                "section": "参照カウンタ法",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/06/memory-management-stack-heap-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### ガベージコレクタ\n廃棄処理をしないまま、ゴミだらけになってしまったメモリ空間を再利用するのが、ガベージコレクタである。マークアンドスイープ法などが用いられる。",
+            "metadata": {
+                "title": "メモリ管理・スタック領域とヒープ領域",
+                "section": "ガベージコレクタ",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/06/memory-management-stack-heap-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "# ガベージコレクタとヒープ管理\n\n参照カウンタ法の問題を示した上で、ガベージコレクタなどの説明を行う。",
+            "metadata": {
+                "title": "ガベージコレクタとヒープ管理",
+                "section": "記事冒頭",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/10/gc-heap-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### 動的メモリ領域とフリーリスト\n動的なメモリ領域(ヒープ領域)は、malloc()関数で処理用のメモリを借り、free()関数で使わなくなったメモリを返却する。返却されたメモリ領域は、free_list と呼ばれるリスト構造で保存され、再利用される。",
+            "metadata": {
+                "title": "ガベージコレクタとヒープ管理",
+                "section": "動的メモリ領域とフリーリスト",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/10/gc-heap-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### ヒープメモリの断片化\nヒープメモリの malloc() , free() を繰り返すと、使用中領域と未使用領域が交互に並ぶ状態が発生する。これにより、全体の未使用領域の合計では十分なサイズでも、大きなメモリブロックを要求されても十分な大きさのメモリが見つからない状態が発生する場合がある。これをヒープメモリの断片化といい、使用しづらい小さなメモリブロックはヒープホールと呼ばれる。",
+            "metadata": {
+                "title": "ガベージコレクタとヒープ管理",
+                "section": "ヒープメモリの断片化",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/10/gc-heap-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "# 関数ポインタとラムダ式\n\nJavaScriptの無名関数やアロー関数、C言語の関数ポインタ、ラムダ式など、関数を引数として渡す機能について説明。",
+            "metadata": {
+                "title": "関数ポインタとラムダ式",
+                "section": "記事冒頭",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/20/function-pointer-lambda-exp-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### C++の変数キャプチャとJavaScriptのクロージャ\nJavaScriptにおいて、関数オブジェクトの中で、その周囲の局所変数を参照できる機能をクロージャと呼ぶ。C++でも無名関数などでクロージャと同様の処理を書くことができるようにするために変数キャプチャという機能がある。",
+            "metadata": {
+                "title": "関数ポインタとラムダ式",
+                "section": "C++の変数キャプチャとJavaScriptのクロージャ",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/20/function-pointer-lambda-exp-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "### Javaでラムダ式を使う例\nJava8 以降でラムダ式の機能が使える。ArrayList や Array の全要素に対して処理を行う forEach() メソッドでは、各要素に対して実行する関数を、無名関数として渡すことで、ループを回す繰り返し文を使わずにプログラムを記述できる。Javaでは、ラムダ式は関数型インタフェースと組み合わせて使う必要がある。",
+            "metadata": {
+                "title": "関数ポインタとラムダ式",
+                "section": "Javaでラムダ式を使う例",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/20/function-pointer-lambda-exp-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "# レポート課題(後期期末) ハッシュ法\n\n### 課題内容\n以下の内容の中から１つを選びハッシュ法でデータを登録・検索するプログラムを作成せよ。\n- 名前と電話番号\n- 名前とメールアドレス\n- 名前と生年月日\nハッシュ衝突が発生しているかどうかを確認し、ハッシュ関数を変更することでハッシュ衝突がどうなるかの違いなどを検証すること。",
+            "metadata": {
+                "title": "レポート課題(後期期末) ハッシュ法",
+                "section": "課題内容",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/27/report-hash-2024/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "# Javaでラムダ式の呼び出し\n\nJavaでは、Stremクラスでよく使われる関数インタフェースは以下の通り。\n- Predicate<T> – 引数Tでboolean型を返す\n- Supplier<R> – 引数なし で R型を返す\n- Consumer<T> – 引数T で void型\n- Function<T,R> – 引数T で R型を返す",
+            "metadata": {
+                "title": "Javaでラムダ式の呼び出し",
+                "section": "記事冒頭",
+                "source": "https://www.ei.fukui-nct.ac.jp/2025/01/27/java-lambda-function-interface/",
+                "subject": "情報構造論"
+            }
+        },
+        {
+            "content": "# アルゴリズムとデータ構造の詳細レポート：実装理論とメモリ制御\n\n## 1. 検索アルゴリズムの深化：ハッシュ法とB木\n\n### 1.1 ハッシュ法における衝突解決のメカニズム\nハッシュ法は、ハッシュ関数を用いてデータから**ハッシュ値（配列の添え字）**を算出し、**$O(1)$** でのアクセスを目指す手法です。しかし、異なるデータが同じハッシュ値を持つ「ハッシュ衝突」への対策が不可欠です。\n\n*   **オープンアドレス法:** 衝突時に「隣の空き」を探す手法です。\n    *   **実装上の注意:** 表が満杯に近づくと空きを探すループが長くなり、性能が $O(N)$ に劣化します。また、表が完全に埋まると無限ループに陥るため、実際の運用ではサイズの拡張（リハッシュ）などの改良が必要です。\n*   **チェイン法:** 同じハッシュ値のデータをリスト構造で繋ぐ手法です。\n    *   **計算量の変動:** データ件数 $N$ に対してハッシュ表のサイズが十分であれば $O(1)$ ですが、リストが長くなると平均して $O(N / \\text{表サイズ})$ の時間がかかります。\n*   **文字列ハッシュ関数:** 文字列をハッシュ化する際は、単純な加算では「ABC」と「CBA」が同じ値になるため、**「小さい素数を掛け、大きい素数で余りを求める」**といった線形合同法に似た計算を用いることで、値の偏りを防ぎます。\n\n### 1.2 B木・B+木の構造とデータベースへの応用\n2分探索木を拡張した**B木**は、1つのノードに複数のデータ（位数 $N$ に対して $N$〜$2N$ 個）を保持します。\n\n*   **追加と分割:** データ追加時にノードが溢れる場合、**中央値**を選んで上のノードに引き上げ、残りを新しいノードに分割することで、木の高さが一定に保たれ、検索性能 **$O(\\log N)$** を維持します。\n*   **B+木の利点:** 検索用のB木構造に加え、最下位の葉ノード同士をポインタで繋いだ**シーケンスセット**を持ちます。これにより、単一検索だけでなく、全データの順次走査（範囲検索など）も効率的に行えるよう設計されています。\n\n## 2. 木構造の探索：スタックと待ち行列の使い分け\n\n木構造の全ノードを走査する際、**「未処理のノードをどのデータ構造に保存するか」**によって探索順序が決定します。\n\n*   **深さ優先探索 (DFS):** **スタック（LIFO）**を使用します。\n    *   **前順 (Pre-order):** 「自分→左の子→右の子」の順で処理します。\n    *   **中順 (In-order):** 「左の子→自分→右の子」の順で処理します。2分探索木でこれを行うと、データを昇順で取得できます。\n*   **幅優先探索 (BFS):** **待ち行列（FIFO）**を使用します。\n    *   根に近いノードから順に処理するため、チェスや将棋などのゲーム戦略において、爆発的な手数の増加（探索空間の膨張）を抑えつつ、不利な筋を早期に打ち切る際に有用です。\n\n## 3. メモリ管理の内部構造と動的領域\n\nプログラムの柔軟性を支えるメモリ管理には、実行時の効率と安全性のトレードオフが存在します。\n\n### 3.1 ヒープ領域とフリーリストのアルゴリズム\n動的メモリ（ヒープ）は `malloc()` で確保し、`free()` で返却しますが、内部では**フリーリスト (free\\_list)** という構造で空き領域が管理されています。\n\n*   **メモリの併合:** `free()` 実行時、返却された領域が隣接する空きブロックと連続している場合、それらを**併合（結合）**して大きなブロックに戻します。これを行わないと、メモリが細切れになる**断片化（フラグメンテーション）**が発生し、合計空き容量は足りていても大きなメモリ確保に失敗する「ヒープホール」が生じます。\n*   **管理の効率化:** リストをアドレスの昇順に並べたり、サイズごとに異なるリスト（8/16/32バイト専用など）を用意したりすることで、適切なサイズのブロックを探す手間を省く工夫がなされます。\n\n### 3.2 ガベージコレクション (GC) の手法\nJavaなどの近代的な言語では、手動の `free()` に代わりGCがメモリを回収します。\n\n*   **参照カウンタ法:** データに「自分を参照しているポインタの数」を記録させます。カウンタが0になれば即座に解放できますが、データ同士が互いを参照し合う**循環リスト**の状態では、どこからも使われていなくてもカウンタが0にならず、メモリが解放されない欠点があります。\n*   **マークアンドスイープ法:** 全領域に「不要」の印を付け、ルートから辿れる「使用中」のものに印を付け直し、残った「不要」なものを一括回収します。この実行中は**処理が一時中断される**ため、リアルタイム性や操作性に影響を与えることがあります。\n\n## 4. プログラミングパラダイム：関数抽象化と安全性\n\n### 4.1 関数ポインタ、ラムダ式、クロージャ\n処理自体をデータとして扱うことで、コードの汎用性が高まります。\n\n*   **コールバック:** C言語の `qsort()` のように、比較関数（`cmp_int` など）を関数ポインタとして渡すことで、ソートアルゴリズム自体を変えずに異なるデータ型に対応できます。\n*   **ラムダ式と型推論:** Java 8以降では、`Predicate`（条件判定）、`Consumer`（消費）、`Function`（変換）などの**関数型インタフェース**を介してラムダ式を扱います。Javaでは型推論により、引数の型宣言を省略して簡潔に記述可能です。\n*   **クロージャ:** JavaScriptやC++（変数キャプチャ）において、無名関数の外側の局所変数を参照し続ける機能を指し、変数のカプセル化や保守性の向上に寄与します。\n\n### 4.2 セキュリティとRustの登場\nC言語のような手動管理は、スタック領域での**バッファオーバーフロー**を悪用した攻撃（戻り番地の書き換えなど）を許す脆弱性を生みがちです。これに対し、**Rust** は「ボローチェッカー」という仕組みで参照の有効性を厳格に検証し、実行時のオーバーヘッドを抑えつつ**メモリ安全性**を保証する言語として注目されています。\n\n---\n**総論として**、計算量の最適化（アルゴリズム選択）に加え、メモリの内部管理（ヒープ・GC）や現代的な記述法（ラムダ式・安全性重視の言語）を組み合わせることが、堅牢で高性能なソフトウェア開発の鍵となります。",
+            "metadata": {
+                "title": "アルゴリズムとデータ構造の詳細レポート：実装理論とメモリ制御",
+                "section": "全体",
+                "source": "local-generation:algorithm-and-datastructure-report-2026-01-19",
+                "subject": "情報構造論"
+            }
+        }
+    ]
+}
