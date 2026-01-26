@@ -1,0 +1,180 @@
+{
+  "concepts": {
+    "tree-structure": {
+      "label": "木構造",
+      "level": "beginner",
+      "prerequisites": [],
+      "relatedConcepts": ["binary-search-tree", "dfs", "bfs"],
+      "synonyms": ["ツリー構造", "木"],
+      "description": "階層的な関係を表現するためのデータ構造。根(ルート)から葉(リーフ)に向かって分岐していく。",
+      "explanations": {
+        "beginner": "家系図のように、1つの親から複数の子が枝分かれしていくような形のデータ整理方法です。",
+        "intermediate": "根(root)ノード、節(node)、枝(edge)、葉(leaf)から構成される非線形のデータ構造で、循環しない有向グラフの一種です。",
+        "advanced": "再帰的な定義が可能なデータ構造であり、多くの探索アルゴリズムの基盤となります。平衡木や多分木など、様々な派生が存在します。"
+      },
+      "misconceptions": [{
+        "wrong": "木構造は常に2つにしか分岐しない",
+        "correct": "それは2分木(binary tree)という特殊な木構造です。3つ以上に分岐する木(多分木)も多く存在します。",
+        "hint": "データベースで使われるB木は、1つのノ-ドから多数のノードに分岐します。"
+      }],
+      "exercises": [{
+        "id": "tree-ex1",
+        "question": "木構造の出発点となるノードを何と呼びますか？",
+        "type": "short-answer",
+        "answer": "根(ルート)",
+        "hints": ["木の最も上の部分です。"]
+      }]
+    },
+    "dfs": {
+      "label": "深さ優先探索",
+      "level": "intermediate",
+      "prerequisites": ["tree-structure", "stack"],
+      "relatedConcepts": ["bfs", "recursion"],
+      "synonyms": ["DFS", "Depth-First Search"],
+      "description": "木の探索手法の一つ。可能な限り深く探索し、行き止まりになったら戻って別の分岐を探索する。",
+      "explanations": {
+        "beginner": "迷路を解くとき、とにかく行けるところまでまっすぐ進み、壁にぶつかったら一つ前に戻って別の道を行くような方法です。",
+        "intermediate": "スタック(LIFO)を用いて、最後に訪れたノードの隣を次に探索します。再帰呼び出しで自然に実装できます。",
+        "advanced": "訪問済みのノードを管理しないと無限ループに陥る可能性があります。全探索やトポロジカルソートに応用されます。"
+      },
+      "misconceptions": [{
+        "wrong": "深さ優先探索と幅優先探索は、どちらを使っても結果は同じ",
+        "correct": "見つかる順序が全く異なります。また、最短経路を探すような問題では、深さ優先探索は最適ではありません。",
+        "hint": "深さ優先探索は「深く」、幅優先探索は「広く」探索します。"
+      }],
+      "exercises": [{
+        "id": "dfs-ex1",
+        "question": "深さ優先探索の実装で中心的に使われるデータ構造は何ですか？",
+        "type": "short-answer",
+        "answer": "スタック (Stack)",
+        "hints": ["後入れ先出し(LIFO)の構造です。"]
+      }]
+    },
+    "bfs": {
+      "label": "幅優先探索",
+      "level": "intermediate",
+      "prerequisites": ["tree-structure", "queue"],
+      "relatedConcepts": ["dfs"],
+      "synonyms": ["BFS", "Breadth-First Search"],
+      "description": "木の探索手法の一つ。根に近いノードから順番に、同じ階層(深さ)ごとに探索する。",
+      "explanations": {
+        "beginner": "石を水に投げたときに波紋が広がるように、自分から近い場所を順番に調べていく方法です。",
+        "intermediate": "待ち行列(キュー/FIFO)を用いて、最初に訪れたノードの隣を次に探索します。最短経路問題によく使われます。",
+        "advanced": "重みがないグラフにおける単一始点最短路問題の解決に最適です。探索空間の爆発的な増加を抑えたい場合にも有効です。"
+      },
+      "misconceptions": [],
+      "exercises": [{
+        "id": "bfs-ex1",
+        "question": "幅優先探索が最短経路の発見に適しているのはなぜですか？",
+        "type": "short-answer",
+        "answer": "近い順に探索するから",
+        "hints": ["根(スタート)からの距離が同じノードを順番に見ていきます。"]
+      }]
+    },
+    "b-tree": {
+      "label": "B木",
+      "level": "advanced",
+      "prerequisites": ["binary-search-tree"],
+      "relatedConcepts": ["b-plus-tree", "database", "data-structures"],
+      "synonyms": ["B-Tree", "Bツリー"],
+      "description": "データベースのインデックスなどに使われる、平衡多分岐木構造。",
+      "explanations": {
+        "beginner": "2分探索木を太らせたようなもので、1つのノードにたくさんのデータを持ち、木の高さが低くなるように工夫されています。",
+        "intermediate": "ノード内のデータはソートされており、各ノードはN個から2N個のデータを保持します。データ追加時にノードが溢れると、中央値を親に上げて分割することで木の平衡を保ちます。",
+        "advanced": "ディスクI/Oを削減するために考案されたデータ構造。ノードサイズをディスクのブロックサイズに合わせることで、一度の読み込みで大量のデータをメモリに乗せ、検索効率を最大化します。"
+      },
+      "misconceptions": [{
+        "wrong": "B木は2分木(Binary Tree)のBである",
+        "correct": "Bayer(考案者)のB、Balanced(平衡)のBなど諸説あり、Binary(2分)の意味ではありません。",
+        "hint": "B木は多分岐木であり、2分岐に限定されません。"
+      }],
+      "exercises": [{
+        "id": "btree-ex1",
+        "question": "B木がデータベースで利用される主な理由は何ですか？",
+        "type": "short-answer",
+        "answer": "ディスクI/Oを減らすため",
+        "hints": ["木の高さが低く、一度に読み込むデータ量が多いためです。"]
+      }]
+    },
+    "hashing": {
+      "label": "ハッシュ法",
+      "level": "intermediate",
+      "prerequisites": [],
+      "relatedConcepts": ["database", "data-structures"],
+      "synonyms": ["ハッシュ", "ハッシング"],
+      "description": "データから一定の計算手順(ハッシュ関数)で固定長のハッシュ値を算出し、高速なアクセスを実現する手法。",
+      "explanations": {
+        "beginner": "データから「背番号」のようなユニークな番号を計算して、その番号の場所にデータを格納する方法です。探すときも一発で場所がわかります。",
+        "intermediate": "ハッシュ関数を用いてキーを配列の添え字に変換することで、理想的にはO(1)での検索・追加・削除を可能にします。ハッシュ衝突の解決策が重要です。",
+        "advanced": "ハッシュ関数の選択が性能を大きく左右します。一様性(ハッシュ値が偏らない)と単純な計算であることが求められます。暗号学的ハッシュ関数とは目的が異なります。"
+      },
+      "misconceptions": [{
+        "wrong": "ハッシュ法は常にO(1)で動作する",
+        "correct": "それは理想的な場合です。ハッシュ衝突が多発すると、チェイン法ではリストの線形探索、オープンアドレス法では空き場所探しが発生し、性能はO(N)に近づきます。",
+        "hint": "ハッシュ表のサイズやハッシュ関数の質が性能に影響します。"
+      }],
+      "exercises": [{
+        "id": "hash-ex1",
+        "question": "異なるデータから同じハッシュ値が生成されてしまうことを何と呼びますか？",
+        "type": "short-answer",
+        "answer": "ハッシュ衝突",
+        "hints": ["ハッシュ法の最大の課題です。"]
+      }]
+    },
+    "memory-management": {
+      "label": "メモリ管理",
+      "level": "intermediate",
+      "prerequisites": [],
+      "relatedConcepts": ["garbage-collection", "stack", "heap"],
+      "synonyms": ["メモリマネジメント"],
+      "description": "プログラムが使用するメモリを効率的かつ安全に割り当て、解放する仕組み。",
+      "explanations": {
+        "beginner": "プログラムが作業するために使う「机(メモリ)」を、必要な人に貸し出したり、使い終わったら片付けたりする管理のことです。",
+        "intermediate": "スタック領域(静的)とヒープ領域(動的)の2つが主に利用されます。ヒープ領域の管理では、断片化(フラグメンテーション)が問題となることがあります。",
+        "advanced": "手動管理(C言語のmalloc/free)と自動管理(ガベージコレクション)に大別されます。OSの仮想記憶システムとも密接に関連します。"
+      },
+      "misconceptions": [],
+      "exercises": [{
+        "id": "mem-ex1",
+        "question": "動的に確保され、プログラマが明示的に解放する必要があるメモリ領域は何ですか？",
+        "type": "short-answer",
+        "answer": "ヒープ領域",
+        "hints": ["`malloc()` や `new` で確保される領域です。"]
+      }]
+    },
+    "garbage-collection": {
+      "label": "ガベージコレクション",
+      "level": "advanced",
+      "prerequisites": ["memory-management", "heap"],
+      "relatedConcepts": ["reference-counting"],
+      "synonyms": ["GC", "ごみ集め"],
+      "description": "プログラムから参照されなくなったメモリ(ガベージ)を自動的に検出し、解放する仕組み。",
+      "explanations": {
+        "beginner": "机の上が散らかってきたら、もう使っていない道具を自動的に片付けてくれるお掃除ロボットのようなものです。",
+        "intermediate": "JavaやJavaScriptなどの言語に搭載されています。参照されなくなったオブジェクトを特定し、ヒープ領域を再利用可能にします。主な手法にマーク&スイープ法があります。",
+        "advanced": "GCの実行中はプログラムの実行が一時停止(Stop-the-World)することがあり、これが性能問題になることも。世代別GCやコンカレントGCなど、停止時間を短縮する様々な改良手法が存在します。"
+      },
+      "misconceptions": [{
+        "wrong": "ガベージコレクションがあればメモリリークは絶対に起きない",
+        "correct": "プログラムが必要だと判断している(参照が残っている)が、実際にはもう使われないオブジェクトは解放されません。これが論理的なメモリリークの原因になります。",
+        "hint": "グローバル変数や、イベントリスナーの解除し忘れなどが原因になりがちです。"
+      }],
+      "exercises": []
+    }
+  },
+  "relations": [
+    {"from": "tree-structure", "to": "dfs", "type": "prerequisite", "strength": 0.9},
+    {"from": "tree-structure", "to": "bfs", "type": "prerequisite", "strength": 0.9},
+    {"from": "binary-search-tree", "to": "b-tree", "type": "prerequisite", "strength": 0.8},
+    {"from": "b-tree", "to": "b-plus-tree", "type": "prerequisite", "strength": 0.9},
+    {"from": "memory-management", "to": "garbage-collection", "type": "prerequisite", "strength": 0.9},
+    {"from": "dfs", "to": "bfs", "type": "related", "strength": 0.8},
+    {"from": "b-tree", "to": "database", "type": "related", "strength": 0.9},
+    {"from": "hashing", "to": "database", "type": "related", "strength": 0.7}
+  ],
+  "learnerLevels": {
+    "beginner": { "description": "初学者" },
+    "intermediate": { "description": "基礎理解済み" },
+    "advanced": { "description": "応用段階" }
+  }
+}
