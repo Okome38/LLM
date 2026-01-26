@@ -1,0 +1,107 @@
+{
+  "concepts": {
+    "breathing": {
+      "label": "腹式呼吸",
+      "description": "歌の全ての基礎となる、横隔膜を使った呼吸法。",
+      "level": "beginner",
+      "prerequisites": [],
+      "relatedConcepts": ["resonance", "chest-voice", "head-voice"],
+      "nextSteps": ["resonance", "lip-roll"]
+    },
+    "resonance": {
+      "label": "共鳴",
+      "description": "声帯で生まれた音を体の空間で響かせ、豊かな声を作る技術。",
+      "level": "beginner",
+      "prerequisites": ["breathing"],
+      "relatedConcepts": ["chest-voice", "head-voice", "mixed-voice", "singers-formant"],
+      "nextSteps": ["chest-voice", "head-voice", "singers-formant"]
+    },
+    "chest-voice": {
+      "label": "チェストボイス",
+      "description": "話し声に近く、胸に響く力強い地声。",
+      "level": "beginner",
+      "prerequisites": ["breathing"],
+      "relatedConcepts": ["resonance", "head-voice", "mixed-voice", "belting"],
+      "nextSteps": ["head-voice"]
+    },
+    "head-voice": {
+      "label": "ヘッドボイス",
+      "description": "芯のある、頭に響くような高音の裏声。",
+      "level": "intermediate",
+      "prerequisites": ["breathing", "resonance"],
+      "relatedConcepts": ["chest-voice", "mixed-voice", "falsetto", "singers-formant", "belting"],
+      "nextSteps": ["mixed-voice", "singers-formant"]
+    },
+    "mixed-voice": {
+      "label": "ミックスボイス",
+      "description": "地声と裏声を滑らかに繋ぎ、力強い高音を出すための重要技術。",
+      "level": "advanced",
+      "prerequisites": ["chest-voice", "head-voice"],
+      "relatedConcepts": ["resonance", "vibrato", "belting"],
+      "nextSteps": ["vibrato", "belting"]
+    },
+    "vibrato": {
+      "label": "ビブラート",
+      "description": "音を揺らして感情表現を豊かにする技術。",
+      "level": "intermediate",
+      "prerequisites": ["breathing", "long-tone"],
+      "relatedConcepts": ["mixed-voice", "singers-formant"],
+      "nextSteps": []
+    },
+    "lip-roll": {
+      "label": "リップロール",
+      "description": "唇を震わせるウォーミングアップ。声帯をリラックスさせ、息を安定させる。",
+      "level": "beginner",
+      "prerequisites": [],
+      "relatedConcepts": ["breathing"],
+      "nextSteps": ["breathing", "long-tone"]
+    },
+    "long-tone": {
+      "label": "ロングトーン",
+      "description": "声を長く均一に保つ練習。ブレスコントロールの基礎。",
+      "level": "beginner",
+      "prerequisites": ["breathing"],
+      "relatedConcepts": ["vibrato"],
+      "nextSteps": ["vibrato"]
+    },
+    "falsetto": {
+      "label": "ファルセット",
+      "description": "息漏れの多い、柔らかい裏声。ヘッドボイスとしばしば対比される。",
+      "level": "intermediate",
+      "prerequisites": ["breathing"],
+      "relatedConcepts": ["head-voice"],
+      "nextSteps": []
+    },
+    "belting": {
+      "label": "ベルティング",
+      "description": "強い声量を保ちながら高音域を力強く響かせる歌唱方法。",
+      "level": "advanced",
+      "prerequisites": ["mixed-voice", "breathing", "resonance"],
+      "relatedConcepts": ["chest-voice", "head-voice"],
+      "nextSteps": []
+    },
+    "singers-formant": {
+      "label": "シンガーズフォルマント",
+      "description": "約2500Hzから3500Hzの周波数帯域にエネルギー集中が見られる音響的特徴。",
+      "level": "advanced",
+      "prerequisites": ["resonance", "head-voice"],
+      "relatedConcepts": ["mixed-voice", "vibrato"],
+      "nextSteps": []
+    }
+  },
+  "relations": [
+    { "from": "breathing", "to": "resonance", "type": "prerequisite", "strength": 0.9 },
+    { "from": "breathing", "to": "chest-voice", "type": "prerequisite", "strength": 0.9 },
+    { "from": "breathing", "to": "head-voice", "type": "prerequisite", "strength": 0.9 },
+    { "from": "breathing", "to": "long-tone", "type": "prerequisite", "strength": 0.9 },
+    { "from": "long-tone", "to": "vibrato", "type": "prerequisite", "strength": 0.8 },
+    { "from": "chest-voice", "to": "mixed-voice", "type": "prerequisite", "strength": 0.95 },
+    { "from": "head-voice", "to": "mixed-voice", "type": "prerequisite", "strength": 0.95 },
+    { "from": "lip-roll", "to": "breathing", "type": "nextStep", "strength": 0.8 },
+    { "from": "head-voice", "to": "falsetto", "type": "related", "strength": 0.7 },
+    { "from": "mixed-voice", "to": "belting", "type": "related", "strength": 0.9 },
+    { "from": "resonance", "to": "singers-formant", "type": "prerequisite", "strength": 0.9 },
+    { "from": "head-voice", "to": "singers-formant", "type": "prerequisite", "strength": 0.8 },
+    { "from": "singers-formant", "to": "vibrato", "type": "related", "strength": 0.7 }
+  ]
+}
