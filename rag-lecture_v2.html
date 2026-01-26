@@ -352,7 +352,7 @@
 
           const [documentsRes, ontologyRes] = await Promise.all([
             fetch("data/lecture-documents.json"),
-            fetch("data/my-study-ontology.json"),
+            fetch("data/lecture-ontology.json"),
           ]);
 
           const documentsData = await documentsRes.json();
