@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI漫才システム - 金属バット風（ツッコミ強化版）</title>
+    <title>AI漫才システム - 怖いネタ</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -65,29 +65,29 @@
 <body>
     <div class="container">
         <header>
-            <h1>🎭 AI漫才システム - 金属バット風（ツッコミ強化版）</h1>
-            <p class="subtitle">小林のヤンキー暴走ボケと、友保の豊富な優しい関西ツッコミが炸裂します</p>
+            <h1>🎭 AI漫才システム - 怖いネタ版</h1>
+            <p class="subtitle">常軌を逸したボケと、冷静なツッコミが交差します</p>
         </header>
 
         <div class="stage">
             <div class="comedians">
                 <div class="comedian boke-character" id="boke-character">
                     <div class="comedian-icon">😠</div>
-                    <div class="comedian-name">小林</div>
+                    <div class="comedian-name">ボケ</div>
                     <div class="comedian-role">ボケ担当</div>
                 </div>
                 <div class="comedian tsukkomi-character" id="tsukkomi-character">
                     <div class="comedian-icon">😅</div>
-                    <div class="comedian-name">友保</div>
+                    <div class="comedian-name">ツッコミ</div>
                     <div class="comedian-role">ツッコミ担当</div>
                 </div>
             </div>
 
             <div class="dialogue-container" id="dialogue-container">
                 <div class="info-box">
-                    <p>💡 テーマを入力して「漫才スタート」を押してください</p>
-                    <p>🎯 例: 学校、信号、喧嘩、先生、バイト、彼女、クリスマス など</p>
-                    <p>⚠️ 友保のツッコミフレーズを大幅に増やしてバリエーション豊かにしました！</p>
+                    <p>💡 怖い話のテーマを入力して「漫才スタート」を押してください</p>
+                    <p>🎯 例: トンネル、廃校、人形、合わせ鏡、都市伝説 など</p>
+                    <p>⚠️ ボケとツッコミのキャラクター設定を「怖いネタ」用に変更しました。</p>
                 </div>
             </div>
         </div>
@@ -172,7 +172,7 @@
             const response = await llmClient.chat(prompt, { temperature: 0.9 });
             const dialogue = response.response.trim();
             conversationHistory.push({ role: 'boke', text: dialogue });
-            addDialogue('😠 小林', dialogue, 'boke');
+            addDialogue('😠 ボケ', dialogue, 'boke');
             turnCount++;
             updateTurnCount();
             await sleep(300);
@@ -185,73 +185,72 @@
             const response = await llmClient.chat(prompt, { temperature: 0.7 });
             const dialogue = response.response.trim();
             conversationHistory.push({ role: 'tsukkomi', text: dialogue });
-            addDialogue('😅 友保', dialogue, 'tsukkomi');
+            addDialogue('😅 ツッコミ', dialogue, 'tsukkomi');
             turnCount++;
             updateTurnCount();
             await sleep(300);
             highlightComedian(null);
         }
 
-        // 小林（ボケ）プロンプト（変更なし）
+        // ボケ（怖いネタ版）プロンプト
         function buildBokePrompt() {
-            const history = conversationHistory.slice(-6).map(h => `${h.role === 'boke' ? '小林' : '友保'}: ${h.text}`).join('\n');
+            const history = conversationHistory.slice(-6).map(h => `${h.role === 'boke' ? 'ボケ' : 'ツッコミ'}: ${h.text}`).join('\n');
 
             const style = `
-あなたは金属バットの小林です。元ヤンキー風の荒々しい口調で、暴走するボケをしてください。
+あなたは漫才師です。常識から外れた、少し怖いボケをしてください。
 特徴：
-・「お前」「てめえ」「ぶっ飛ばすぞ」「殺すぞ」などの威勢のいい言葉をよく使う
-・自分勝手で過激な主張をし、急に暴力的な方向に話を持っていく
-・関西弁を混ぜて、テンション高めで言う
-・実際のネタ例： 「俺は信号守るタイプや」「喧嘩売られたら絶対買う」「先生殴ったことある」「彼女にDVしたことないで」
+・淡々とした口調で、不気味なことや理解不能なことを言う。
+・聞き手にじわじわとした恐怖を与えるような、サイコパス的な視点を持つ。
+・会話の文脈を無視して、突拍子もない不穏な発言をすることがある。
+・例：「壁のシミ、数えてたら増えるんだよ」「赤ん坊の笑い声って、実は助けを求める声らしいね」「あの電柱、夜になると歩くんだ」
 `;
 
             if (conversationHistory.length === 0) {
-                return `あなたは金属バットの小林です。テーマ「${currentTopic}」について漫才を始めてください。
+                return `あなたは漫才師です。テーマ「${currentTopic}」について、怖い話の漫才を始めてください。
 ${style}
-1文だけで、ヤンキー風に暴走したボケを言ってください。`;
+1文だけで、常識から外れた少し怖いボケを言ってください。`;
             }
 
-            return `あなたは金属バットの小林です。会話を続けてください。
+            return `あなたは漫才師です。会話を続けてください。
 ${style}
 テーマ: ${currentTopic}
 
 ${history}
 
-小林（次のボケ）: （1文だけで、さらに過激に暴走したボケを言ってください）`;
+ボケ（次のボケ）: （1文だけで、さらに不気味で常識から外れたボケを言ってください）`;
         }
 
-        // 友保（ツッコミ）プロンプト（ツッコミの種類を大幅増量！）
+        // ツッコミ（怖いネタ版）プロンプト
         function buildTsukkomiPrompt() {
-            const history = conversationHistory.slice(-6).map(h => `${h.role === 'boke' ? '小林' : '友保'}: ${h.text}`).join('\n');
+            const history = conversationHistory.slice(-6).map(h => `${h.role === 'boke' ? 'ボケ' : 'ツッコミ'}: ${h.text}`).join('\n');
 
             const style = `
-あなたは金属バットの友保です。優しくて温厚な関西弁で、さまざまなパターンのツッコミを入れてください。
+あなたは漫才師です。相方の常識から外れた怖いボケに対して、常識人の立場から冷静にツッコミを入れてください。
 特徴：
-・基本は優しく諌める感じ、少し諦め気味で心配しているような口調
-・ツッコミのバリエーションを豊富に使い分け、自然に使い分けてください
-・使えるツッコミフレーズ例（これらを積極的に使ってください）：
-  - ちゃうねん / ちゃうちゃうちゃう / それちゃうねん
-  - お前アホか / アホちゃうか / ほんまアホやな
-  - 何言うてんねん / 何それ何それ / 何やそれ！
-  - ええ加減にせえよ / もうええわ / やめときやめとき
-  - 落ち着けよ / 落ち着かんか / お前落ち着けって
-  - そんなんちゃうやろ / 普通そうちゃうやろ / それおかしいやろ
-  - 怖いわー / ヤバいヤバい / ほんま怖いねんお前
-  - やめろやめろ / ストップストップ / もう言うな言うな
-  - 誰も得せえへんやろ / 誰も幸せにならんわ
-  - そんなん言うたらあかんて / お前それ言うなよ
-  - ほんまにやめてくれ / 頼むからやめて
-・怒鳴らず、いつも優しくて少し疲れたような感じでツッコむ
+・ボケの異常性を指摘し、聞き手の代弁者のように振る舞う。
+・恐怖や困惑をストレートに表現する。
+・標準語で、論理的かつ的確に指摘する。
+・使えるツッコミフレーズ例（これらを参考に、自然に使い分けてください）：
+  - いや、どういうこと？
+  - ちょっと待って、意味がわからない。
+  - 普通はそうならないだろ。
+  - なんでそんなこと知ってるんだよ…
+  - 怖すぎるだろ！
+  - それ以上言うな。
+  - 聞かなかったことにするわ。
+  - なんか鳥肌立った…。
+  - お前、何が見えてるんだ？
+・ボケの発言の奇妙な点を具体的に指摘する。
 `;
 
-            return `あなたは金属バットの友保です。小林のボケに対してツッコミを入れてください。
+            return `あなたは漫才師です。ボケの怖い発言に対してツッコミを入れてください。
 ${style}
 
 テーマ: ${currentTopic}
 
 ${history}
 
-友保（次のツッコミ）: （1文だけで、優しい関西弁でバリエーション豊かにツッコんでください）`;
+ツッコミ（次のツッコミ）: （1文だけで、常識人の立場から冷静にツッコんでください）`;
         }
 
         async function continueDialogue() {
@@ -285,9 +284,9 @@ ${history}
             turnCount = 0;
             document.getElementById('dialogue-container').innerHTML = `
                 <div class="info-box">
-                    <p>💡 テーマを入力して「漫才スタート」を押してください</p>
-                    <p>🎯 例: 学校、信号、喧嘩、先生、バイト、彼女、クリスマス など</p>
-                    <p>⚠️ 友保のツッコミフレーズを大幅に増やしてバリエーション豊かにしました！</p>
+                    <p>💡 怖い話のテーマを入力して「漫才スタート」を押してください</p>
+                    <p>🎯 例: トンネル、廃校、人形、合わせ鏡、都市伝説 など</p>
+                    <p>⚠️ ボケとツッコミのキャラクター設定を「怖いネタ」用に変更しました。</p>
                 </div>`;
             document.getElementById('topic-input').value = '';
             updateStatus('待機中...', false);
